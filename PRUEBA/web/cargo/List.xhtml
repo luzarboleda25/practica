@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListCargoTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+           <!-- Etiqueta para mensajes -->
+            <p:growl id="growl" showDetail="true" sticky="true" /> 
+            <h:panelGroup id="formulario">
+                <p:panel id="panel" header="#{bundle.ListPanelCrear}" >            
+
+                    <h:form prependId="false">
+                        <p:panelGrid  columns="2">
+                            <h:outputText value="#{bundle.ListNombreCargo}"></h:outputText>
+                            <h:inputText value="#{cargoController.selected.nombre}"></h:inputText>
+                            <h:outputText value="#{bundle.ListDescripcionCargo}"></h:outputText>
+                            <h:inputText value="#{cargoController.selected.descripcion}"></h:inputText>
+                            <p:commandButton value="#{bundle.ListBotonCrear}" update="@form :panelTabla" actionListener="#{cargoController.create}" ></p:commandButton>
+                        </p:panelGrid> 
+                    </h:form>
+
+                </p:panel>  
+                <p:panel id="panel_buscar" header="#{bundle.ListPanelBuscar}" >            
+                    <h:form prependId="false">
+                        <p:panelGrid  columns="2">
+                            <h:outputText value="#{bundle.ListNombreCargo}"></h:outputText>
+                            <h:inputText value="#{cargoController.buscar}" id="bus"></h:inputText>
+                            <p:commandButton value="#{bundle.ListBotonBuscar}" update="@form :res" actionListener="#{cargoController.otro}" ></p:commandButton>
+                        </p:panelGrid> 
+                    </h:form>
+                    <h:panelGroup id="res">
+                        <h:outputText value="#{cargoController.descripcion.descripcion}" />
+                    </h:panelGroup>
+
+                </p:panel>  
+
+            </h:panelGroup> 
+            <h:panelGroup id="panelTabla">
+                <h:form styleClass="jsfcrud_list_form">
+                    <h:panelGroup id="messagePanel" layout="block">
+                        <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                    </h:panelGroup>
+                    <h:outputText escape="false" value="#{bundle.ListCargoEmpty}" rendered="#{cargoController.items.rowCount == 0}"/>
+                    <h:panelGroup rendered="#{cargoController.items.rowCount > 0}">
+                        <p:dataTable editable="true" var="item" value="#{cargoController.lazyModel}" paginator="true" rows="10"  
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"  
+                                     rowsPerPageTemplate="5,10,15"  id="carTable" lazy="true"> 
+                            <p:ajax event="rowEdit" listener="#{cargoController.onEdit}" />  
+                            <p:ajax event="rowEditCancel" listener="#{cargoController.onCancel}" />  
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCargoTitle_cargoid}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.cargoid}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCargoTitle_nombre}"/>
+                                </f:facet>
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{item.nombre}"/>
+                                    </f:facet>  
+                                    <f:facet name="input">  
+                                        <p:inputText value="#{item.nombre}" style="width:100%"/>  
+                                    </f:facet> 
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCargoTitle_descripcion}"/>
+                                </f:facet>
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{item.descripcion}"/>
+                                    </f:facet>
+                                    <f:facet name="input">  
+                                        <p:inputText value="#{item.descripcion}" style="width:100%"/>  
+                                    </f:facet> 
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column style="width:6%">  
+                                <p:rowEditor />  
+                            </p:column> 
+                            <p:column style="width:6%">  
+                                <p:commandLink action="#{cargoController.Eliminar_Cargo_}" update="@form :panelTabla :growl" >
+                                    <f:setPropertyActionListener target="#{cargoController.current}" value="#{item}"></f:setPropertyActionListener>
+                                    <p:graphicImage value="/resources/images/icono_papelera.ico"  width="35" height="34" />
+
+                                </p:commandLink>  
+                            </p:column> 
+                        </p:dataTable>
+                    </h:panelGroup>
+                    <br />
+                    <p:commandLink action="#{cargoController.prepareCreate}" value="#{bundle.ListCargoCreateLink}"/>
+                    <br />
+                    <br />
+                    <h:link outcome="/index" value="#{bundle.ListCargoIndexLink}"/>
+                </h:form>
+            </h:panelGroup>
+        </ui:define>
+    </ui:composition>
+
+</html>

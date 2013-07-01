@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListEmpleadoTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <!-- Etiqueta para mensajes -->
+            <p:growl id="growl" showDetail="true" sticky="true" /> 
+            <h:panelGroup id="formulario">
+                <p:panel id="panel" header="#{bundle.ListPanelCrear}" >            
+
+                    <h:form prependId="false">
+                        <p:panelGrid  columns="2">
+                            <h:outputText value="#{bundle.ListNombreEmpleado}"></h:outputText>
+                            <h:inputText value="#{empleadoController.selected.nombre}"></h:inputText>
+                            <h:outputText value="#{bundle.ListApellidoEmpleado}"></h:outputText>
+                            <h:inputText value="#{empleadoController.selected.apellido}"></h:inputText>
+                            <p:selectOneMenu value="#{empleadoController.cargoseleccionado}" >
+                                <f:selectItems value="#{empleadoController.cargos}" var="carg" itemLabel="#{carg.nombre}" itemValue="#{carg}" />
+                            </p:selectOneMenu> 
+                            <p:selectOneMenu value="#{empleadoController.departamentoSeleccionado}" >
+                                <f:selectItems value="#{empleadoController.departamentoss}" var="dep" itemLabel="#{dep.nombre}" itemValue="#{dep}" />
+                            </p:selectOneMenu> 
+                            <p:commandButton value="#{bundle.ListBotonCrear}" update="@form :panelTabla" actionListener="#{empleadoController.create}" ></p:commandButton>
+
+                        </p:panelGrid> 
+                    </h:form>
+
+                </p:panel>  
+                <p:panel id="panel_buscar" header="#{bundle.ListPanelBuscar}" >            
+                    <h:form prependId="false">
+                        <p:panelGrid  columns="2">
+                            <h:outputText value="#{bundle.ListNombreEmpleado}"></h:outputText>
+                            <h:inputText value="#{empleadoController.buscar}" id="bus"></h:inputText>
+                            <p:commandButton value="#{bundle.ListBotonBuscar}" update="@form :res" actionListener="#{empleadoController.otro}" />
+                        </p:panelGrid> 
+                    </h:form>
+                    <h:panelGroup id="res">
+                        <h:outputText value="#{empleadoController.apellido.apellido}" />
+                    </h:panelGroup>
+
+                </p:panel>  
+
+            </h:panelGroup> 
+            <h:panelGroup id="panelTabla">
+                <h:form styleClass="jsfcrud_list_form">
+                    <h:panelGroup id="messagePanel" layout="block">
+                        <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                    </h:panelGroup>
+                    <h:outputText escape="false" value="#{bundle.ListEmpleadoEmpty}" rendered="#{empleadoController.items.rowCount == 0}"/>
+                    <h:panelGroup rendered="#{empleadoController.items.rowCount > 0}">
+                        <h:outputText value="#{empleadoController.pagination.pageFirstItem + 1}..#{empleadoController.pagination.pageLastItem + 1}/#{empleadoController.pagination.itemsCount}"/>&nbsp;
+                        <h:commandLink action="#{empleadoController.previous}" value="#{bundle.Previous} #{empleadoController.pagination.pageSize}" rendered="#{empleadoController.pagination.hasPreviousPage}"/>&nbsp;
+                        <h:commandLink action="#{empleadoController.next}" value="#{bundle.Next} #{empleadoController.pagination.pageSize}" rendered="#{empleadoController.pagination.hasNextPage}"/>&nbsp;
+                        <p:dataTable editable="true" var="item" value="#{empleadoController.lazyModel}" paginator="true" rows="10"  
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"  
+                                     rowsPerPageTemplate="5,10,15"  id="carTable" lazy="true"> 
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListEmpleadoTitle_empleadoid}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.empleadoid}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListEmpleadoTitle_nombre}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.nombre}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListEmpleadoTitle_apellido}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.apellido}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListEmpleadoTitle_direccion}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.direccion}"/>
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListEmpleadoTitle_sueldo}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.sueldo}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListEmpleadoTitle_departamentoid}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.departamentoid.nombre}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListEmpleadoTitle_cargoid}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.cargoid.nombre}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="&nbsp;"/>
+                                </f:facet>
+                                <h:commandLink action="#{empleadoController.prepareView}" value="#{bundle.ListEmpleadoViewLink}"/>
+                                <h:outputText value=" "/>
+                                <h:commandLink action="#{empleadoController.prepareEdit}" value="#{bundle.ListEmpleadoEditLink}"/>
+                                <h:outputText value=" "/>
+                                <h:commandLink action="#{empleadoController.destroy}" value="#{bundle.ListEmpleadoDestroyLink}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGroup>
+                    <br />
+                    <h:commandLink action="#{empleadoController.prepareCreate}" value="#{bundle.ListEmpleadoCreateLink}"/>
+                    <br />
+                    <br />
+                    <h:link outcome="/index" value="#{bundle.ListEmpleadoIndexLink}"/>
+                </h:form>
+            </h:panelGroup>
+        </ui:define>
+    </ui:composition>
+
+</html>

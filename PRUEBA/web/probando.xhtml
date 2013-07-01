@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
+    <h:head>
+        <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript" ></script>
+        <title></title>    
+    </h:head>
+    <h:body>
+        <!--    -->
+        <!--  columns="4" mostrara 4 en la misma fila  -->
+        <h:panelGrid columns="2"> 
+            <h:inputText id ="nombre" label="hola" > </h:inputText>
+            <h:button id="boton" value="Boton"> </h:button>
+            <h:inputSecret id="secreto" > </h:inputSecret>
+            <h:outputText id="salida" value="Bienvenido"></h:outputText>
+            <!--mostrando atributos creados en cargo controler  -->
+            <h:inputText id="ejemplo" value="#{cargoController.nombre} #{cargoController.apellido}"></h:inputText>
+            <h3>Calendario</h3>  
+            <p:calendar value="#{cargoController.date1}" mode="inline" id="inlineCal"/>  
+            <h4>Bloc de Notas</h4>  
+            <p:editor id="editor" value="#{cargoController.value}" width="600"/>  
+        </h:panelGrid>       
+        <!-- EJEMPLO implice   -->
+        <h4>implice</h4>  
+        <h:outputText value="Basico: " />  
+        <p:inplace id="basic">  
+            <p:inputText value="Editame" />  
+        </p:inplace>  
+        <!-- EJEMPLO de Select mostrandolo   -->
+        <h:form>  
+            <h4>EJEMPLO de Select mostrandolo</h4>  
+            <p:selectCheckboxMenu value="#{cargoController.selectedMovies}" label="Movies" filter="true" filterMatchMode="startsWith" panelStyle="width:220px">  
+                <f:selectItems value="#{cargoController.movies}" />  
+            </p:selectCheckboxMenu>  
+
+            <p:separator style="margin-bottom:10px"/>  
+
+            <p:commandButton value="Submit" update="display" oncomplete="dlg.show()" />  
+
+            <p:dialog header="Selected Movies" modal="true" showEffect="fade" hideEffect="fade" widgetVar="dlg" resizable="false">  
+                <p:dataList id="display" value="#{cargoController.selectedMovies}" var="movie">  
+                    #{movie}  
+                </p:dataList>  
+            </p:dialog>  
+
+        </h:form> 
+
+        <p:gmap center="7.766666666666667, -72.23333333333333" zoom="15" type="HYBRID" style="width:600px;height:400px" />  
+
+        <!-- EJEMPLO CONTRASEÑAS  -->
+        <h:form id="form"> 
+            <p:panel header="MODELOS DE CONTRASEÑAS">  
+                <h:panelGrid columns="2">  
+                    <h:outputText value="Basica: " />  
+                    <p:password id="nonFeedback" value="#{cargoController.password1}" />  
+
+                    <h:outputText value="Con Comentario: " />  
+                    <p:password id="feedback" value="#{cargoController.password2}" feedback="true"/>  
+
+                    <h:outputText value="Con Comentario(Español): " />  
+                    <p:password id="turkishFeedback" value="#{cargoController.password3}" feedback="true"   
+                                promptLabel="Introdue una contraseña" weakLabel="Debil"  
+                                goodLabel="Medio" strongLabel="Fuerte" />  
+
+                    <h:outputText value="Comentarios en Linea: " />  
+                    <p:password id="inlineFeedback" value="#{cargoController.password4}" feedback="true" inline="true" />  
+                </h:panelGrid>  
+            </p:panel>  
+
+            <p:spacer height="10" />  
+
+            <p:panel header="Modo de Ajuste">  
+                <p:messages id="messages" showDetail="true" autoUpdate="true"/>  
+
+                <h:panelGrid columns="2" id="matchGrid">                     
+                    <h:outputLabel for="pwd1" value="Password 1: *" />  
+                    <p:password id="pwd1" value="#{cargoController.password5}" match="pwd2" label="Password 1" required="true"/>  
+
+                    <h:outputLabel for="pwd2" value="Password 2: *" />  
+                    <p:password id="pwd2" value="#{cargoController.password5}" label="Password 2" required="true"/>  
+                </h:panelGrid>  
+
+                <p:commandButton id="saveButton" update="matchGrid" value="Save" />  
+            </p:panel> 
+        </h:form> 
+
+        <!-- EJEMPLO de ESTRELLITAS  -->
+        <h:form id="form1">  
+
+            <p:growl id="messages" showDetail="true"/>  
+
+            <h:panelGrid columns="2" cellpadding="5">  
+                <h:outputText value=" Básica:" />  
+                <p:rating value="#{cargoController.rating1}" />  
+
+                <h:outputText value="Devolución de llamada:" />  
+                <p:rating value="#{cargoController.rating2}" stars="10" cancel="false" onRate="alert('You rated ' + value)"/>  
+
+                <h:outputText value="Ajax Cambio:" />  
+                <p:rating value="#{cargoController.rating3}">  
+                    <p:ajax event="rate" listener="#{ratingController.onrate}" update="messages" />  
+                    <p:ajax event="cancel" listener="#{ratingController.oncancel}" update="messages" />  
+                </p:rating>  
+
+                <h:outputText value="Sólo lectura:"/>  
+                <p:rating value="#{cargoController.rating4}" readonly="true" />  
+
+                <h:outputText value="Inhabilitado"/>  
+                <p:rating value="#{cargoController.rating4}" disabled="true" />  
+
+            </h:panelGrid>  
+
+            <p:commandButton value="Submit" id="submit" update="display" oncomplete="dlg.show()" style="margin:5px"/>  
+
+            <p:dialog header="Values" widgetVar="dlg" showEffect="fade" hideEffect="fade">  
+                <h:panelGrid id="display" columns="2" cellpadding="5">  
+                    <h:outputText value="Rating 1:" />  
+                    <h:outputText value="#{cargoController.rating1}" />  
+
+                    <h:outputText value="Rating 2:" />  
+                    <h:outputText value="#{cargoController.rating2}" />  
+
+                    <h:outputText value="Rating 3:" />  
+                    <h:outputText value="#{cargoController.rating3}" />  
+                </h:panelGrid>  
+            </p:dialog>  
+
+        </h:form>
+        <!-- EJEMPLO de grafico de Ovalos  Mapa mental Nodo-->
+        <h:form>  
+
+            <p:mindmap value="#{cargoController.root}" style="width:100%;height:600px;border:1px solid black;">  
+                <p:ajax event="select" listener="#{cargoController.onNodeSelect}" />  
+                <p:ajax event="dblselect" listener="#{cargoController.onNodeDblselect}" update="output" oncomplete="details.show()"/>  
+            </p:mindmap>  
+
+            <p:dialog widgetVar="details" header="Node Details" resizable="false" modal="true" showEffect="fade" hideEffect="fade">  
+                <h:outputText id="output" value="#{cargoController.selectedNode.data}" />  
+            </p:dialog>  
+
+        </h:form>  
+
+        <!-- EJEMPLO de GALERIA VIDEO Y PAGINA-->
+        <h3>Images</h3>  
+        <p:lightBox styleClass="imagebox">  
+            <h:outputLink value="resources/images/sopranos1.jpg" title="Sopranos 1">  
+                <h:graphicImage value="/resources/images/sopranos1_small.jpg"/>  
+            </h:outputLink>  
+
+            <h:outputLink value="/resources/images/sopranos2.jpg" title="Sopranos 2">  
+                <h:graphicImage value="/resources/images/sopranos2_small.jpg" />  
+            </h:outputLink>  
+
+            <h:outputLink value="/resources/images/sopranos3.jpg" title="Sopranos 3">  
+                <h:graphicImage value="/resources/images/sopranos3_small.jpg"/>  
+            </h:outputLink>  
+
+            <h:outputLink value="/resources/images/sopranos4.jpg" title="Sopranos 4">  
+                <h:graphicImage value="/resources/images/sopranos4_small.jpg"/>  
+            </h:outputLink>  
+        </p:lightBox>  
+
+        <h3>Inline</h3>  
+        <p:lightBox>  
+            <h:outputLink value="#">  
+                <h:outputText value="Video Content"/>  
+            </h:outputLink>  
+
+            <f:facet name="inline">  
+                <p:media value="http://vimeo.com/moogaloop.swf?clip_id=18079550"  width="400" height="225" player="flash"/>  
+            </f:facet>  
+        </p:lightBox>  
+
+        <h3>IFrame</h3>  
+        <p:lightBox iframe="true">  
+            <h:outputLink value="http://www.primefaces.org" title="PrimeFaces HomePage">  
+                <h:outputText value="PrimeFaces HomePage"/>  
+            </h:outputLink>  
+        </p:lightBox>  
+    </h:body>
+
+</html>
+
+
